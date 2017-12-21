@@ -10,10 +10,10 @@
 #define MAX_DOUBLE std::numeric_limits<double>::max()
 
 
-KMeans::KMeans(std::vector<DataPoint> dataPoints, int clusterSize)
+KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters)
 {
     DataPoints = dataPoints;
-    ClusterSize = clusterSize;
+    NumClusters = numClusters;
 }
 
 
@@ -21,7 +21,7 @@ KMeans::KMeans(std::vector<DataPoint> dataPoints, int clusterSize)
 // the given cluster size
 void KMeans::Run()
 {
-    InitializeClusters();
+    InitializeCentroids();
     bool _membershipChange = true;
     while (_membershipChange)
     {
@@ -32,10 +32,10 @@ void KMeans::Run()
 
 
 // Initializes the clusers to guaranteed random points
-void KMeans::InitializeClusters()
+void KMeans::InitializeCentroids()
 {
     std::set<int> _usedPointIndexes;
-    for (int i = 0; i < ClusterSize; i++)
+    for (int i = 0; i < NumClusters; i++)
     {
       // only used once to initialise (seed) engine
       std::random_device rd;
@@ -54,10 +54,10 @@ void KMeans::InitializeClusters()
       
       // Make a new datapoint for the cluster.
       // 'State' can just be cluster number, we don't really care
-      Clusters.push_back(DataPoint(
-                                   DataPoints[_index].Label,
-                                   DataPoints[_index].Data)
-                         );
+      Centroids.push_back(DataPoint(
+                                    DataPoints[_index].Label,
+                                    DataPoints[_index].Data)
+                          );
     }
 }
 
@@ -81,14 +81,14 @@ bool KMeans::ChangeMemberships()
         {
           // _currentDistance is distance between DataPoint[i] and its current
           // centroid (cluster assignment)
-          _currentDistance = DataPoints[i].CalculateDistance(Clusters[DataPoints[i].CentroidIndex]);
+          _currentDistance = DataPoints[i].CalculateDistance(Centroids[DataPoints[i].CentroidIndex]);
         }
       
       // For each cluster
-      for (int j = 0; j < ClusterSize; j++)
+      for (int j = 0; j < NumClusters; j++)
         {
           // Calculate distance between DataPoint[i] and Clusters[j]
-          double _potentialNewDistance = DataPoints[i].CalculateDistance(Clusters[j]);
+          double _potentialNewDistance = DataPoints[i].CalculateDistance(Centroids[j]);
           if (_potentialNewDistance < _currentDistance)
             {
               // if DataPoint[i] is closer to Clusters[j] than it was to its
@@ -107,32 +107,42 @@ bool KMeans::ChangeMemberships()
 void KMeans::RecalculateCentroids()
 {
     // For each centroid
-    for (int i = 0; i < ClusterSize; i++)
+    for (int i = 0; i < NumClusters; i++)
     {
         int _total = 0;
-        double _murderTotal = 0.0, _assaultTotal = 0.0, _popTotal = 0.0, _rapeTotal = 0.0;
-
-        // Loop through all datapoints to see which ones are attached to this centroid. We will add up all
-        // points and then average
+        std::array<double,13> _clusterSum
+          
+        // For each dataPoint
         for (int j = 0; j < DataPoints.size(); j++)
         {
             if (DataPoints[j].CentroidIndex == i)
             {
                 _total++;
-                _murderTotal += DataPoints[j].MurderRate;
-                _assaultTotal += DataPoints[j].AssaultRate;
-                _popTotal += DataPoints[j].Population;
-                _rapeTotal += DataPoints[j].RapeRate;
+
+                // add DataPoints to _clusterSum elementwise
+                // https://stackoverflow.com/questions/3376124/how-to-add-
+                // element-by-element-of-two-stl-vectors
+                std::transform(
+                               _clusterSum.begin(),
+                               _clusterSum.end(),
+                               DataPoints[j].begin(),
+                               _clusterSum.begin(),
+                               std::plus<double>()
+                               );
             }
         }
 
         // Assign the new averages for this cluster
-        Clusters[i].MurderRate = _murderTotal / _total;
-        Clusters[i].AssaultRate = _assaultTotal / _total;
-        Clusters[i].Population = _popTotal / _total;
-        Clusters[i].RapeRate = _rapeTotal / _total;
+        std::transform(
+                       _clusterSum.begin(),
+                       _clusterSum.end(),
+                       Centroids[i].begin(),
+                       std::bind1st(std::divides<double>(),_total)
+                       )
+          
     }
 }
+
 
 // Gets the total distortion for the space
 double KMeans::CalculateDistortion()

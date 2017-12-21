@@ -6,15 +6,23 @@
 
 class KMeans
 {
-    public:
-        KMeans(std::vector<DataPoint> dataPoints, int clusterSize); // Our constructor
-        int ClusterSize;
-        std::vector<DataPoint> DataPoints;
-        std::vector<DataPoint> Clusters;
-        void Run(); // Runs the KMeans algorithm
-        void InitializeClusters(); // Initializes the clusers to random points
-        bool ChangeMemberships(); // Reassigns memberships. If anything changes, we return true
-        void RecalculateCentroids(); // Uses new data to recalcultate centroid points
+ public:
+  // Our constructor
+  KMeans(std::vector<DataPoint> dataPoints, int numClusters);
+  std::vector<DataPoint> DataPoints;
+  int NumClusters;
+  // save centroid for each cluster
+  std::vector<DataPoint> Centroids;
+
+  // Initializes the clusers to random points
+  void InitializeCentroids();
+  // Reassigns memberships. If anything changes, we return true
+  bool ChangeMemberships();
+  // Uses new data to recalcultate centroid points
+  void RecalculateCentroids();
+
+  // Runs the KMeans algorithm
+  void Run();
 };
 
 #endif
