@@ -1,10 +1,10 @@
 // kMeans.cpp
+#include <array>
 #include <vector>
-#include <string>
 #include <set>
 #include <random>
 #include <limits>
-#include <iostream>
+#include <algorithm>
 #include "kMeans.h"
 #include "dataPoint.h"
 #define MAX_DOUBLE std::numeric_limits<double>::max()
@@ -110,7 +110,7 @@ void KMeans::RecalculateCentroids()
     for (int i = 0; i < NumClusters; i++)
     {
         int _total = 0;
-        std::array<double,13> _clusterSum
+        std::array<double,13> _clusterSum;
           
         // For each dataPoint
         for (int j = 0; j < DataPoints.size(); j++)
@@ -125,7 +125,7 @@ void KMeans::RecalculateCentroids()
                 std::transform(
                                _clusterSum.begin(),
                                _clusterSum.end(),
-                               DataPoints[j].begin(),
+                               DataPoints[j].Data.begin(),
                                _clusterSum.begin(),
                                std::plus<double>()
                                );
@@ -136,21 +136,9 @@ void KMeans::RecalculateCentroids()
         std::transform(
                        _clusterSum.begin(),
                        _clusterSum.end(),
-                       Centroids[i].begin(),
+                       Centroids[i].Data.begin(),
                        std::bind1st(std::divides<double>(),_total)
-                       )
+                       );
           
     }
-}
-
-
-// Gets the total distortion for the space
-double KMeans::CalculateDistortion()
-{
-    double _totalDistortion = 0.0;
-    for (int i = 0; i < DataPoints.size(); i++)
-    {
-        _totalDistortion += DataPoints[i].CalculateDistance(Clusters[DataPoints[i].CentroidIndex]);
-    }
-    return _totalDistortion;
 }
