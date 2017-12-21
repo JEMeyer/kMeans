@@ -9,13 +9,16 @@
 #include "dataPoint.h"
 #define MAX_DOUBLE std::numeric_limits<double>::max()
 
+
 KMeans::KMeans(std::vector<DataPoint> dataPoints, int clusterSize)
 {
     DataPoints = dataPoints;
     ClusterSize = clusterSize;
 }
 
-// Runs the k-means algorithm on the defined set of data points with the given cluster size
+
+// Runs the k-means algorithm on the defined set of data points with
+// the given cluster size
 void KMeans::Run()
 {
     InitializeClusters();
@@ -27,69 +30,83 @@ void KMeans::Run()
     }
 }
 
-// Initializes the clusers to random points
+
+// Initializes the clusers to guaranteed random points
 void KMeans::InitializeClusters()
 {
     std::set<int> _usedPointIndexes;
     for (int i = 0; i < ClusterSize; i++)
     {
-        // Random number generator from https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
-        std::random_device rd;     // only used once to initialise (seed) engine
-        std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
-        std::uniform_int_distribution<int> uni(0, DataPoints.size()); // guaranteed unbiased
-
-        // Ensure we don't get the same starting data point two times
-        int _index = uni(rng);
-        while (_usedPointIndexes.count(_index) != 0)
+      // only used once to initialise (seed) engine
+      std::random_device rd;
+      // random-number engine used (Mersenne-Twister in this case)
+      std::mt19937 rng(rd());
+      // guaranteed unbiased
+      std::uniform_int_distribution<int> uni(0, DataPoints.size());
+      
+      // Ensure we don't get the same starting data point two times
+      int _index = uni(rng);
+      while (_usedPointIndexes.count(_index) != 0)
         {
-            _index = uni(rng);
+          _index = uni(rng);
         }
-        _usedPointIndexes.insert(_index);
-
-        // Make a new datapoint for the cluster. 'State' can just be cluster number, we don't really care
-        Clusters.push_back(DataPoint(
-            DataPoints[_index].Label,
-            DataPoints[_index].Data));
+      _usedPointIndexes.insert(_index);
+      
+      // Make a new datapoint for the cluster.
+      // 'State' can just be cluster number, we don't really care
+      Clusters.push_back(DataPoint(
+                                   DataPoints[_index].Label,
+                                   DataPoints[_index].Data)
+                         );
     }
 }
 
-// Reassigns memberships. If anything changes, we return true
+
+// Reassigns memberships. If any assignment changes, we return true
 bool KMeans::ChangeMemberships()
 {
-    bool _membershipChange = false;
-    for (int i = 0 ; i < DataPoints.size(); i++)
+  bool _membershipChange = false;
+  // for each DataPoint (DataPoints[i])
+  for (int i = 0 ; i < DataPoints.size(); i++)
     {
-        // If centroid index is -1 this is the first run, just set to max so we know we'll get assigned one
-        double _currentDistance;
-        if (DataPoints[i].CentroidIndex == -1)
+      double _currentDistance;
+      if (DataPoints[i].CentroidIndex == -1)
         {
-            _currentDistance = MAX_DOUBLE;
+          // If centroid index == -1, then this is the first run, so we
+          // just set _currentDistance to C++ infinity (MAX_DOUBLE, above)
+          // so that any new distance will be less than _currentDistance
+          _currentDistance = MAX_DOUBLE;
         }
-        else
+      else
         {
-            _currentDistance = DataPoints[i].CalculateDistance(Clusters[DataPoints[i].CentroidIndex]);
+          // _currentDistance is distance between DataPoint[i] and its current
+          // centroid (cluster assignment)
+          _currentDistance = DataPoints[i].CalculateDistance(Clusters[DataPoints[i].CentroidIndex]);
         }
-
-        // Loop through all clusters and see if any are explicitly larger.
-        for (int j = 0; j < ClusterSize; j++)
+      
+      // For each cluster
+      for (int j = 0; j < ClusterSize; j++)
         {
-            // Calculate potential new distance. If it's lower, it's the newest current and the centroid index changes
-            double _potentialNewDistance = DataPoints[i].CalculateDistance(Clusters[j]);
-            if (_potentialNewDistance < _currentDistance)
+          // Calculate distance between DataPoint[i] and Clusters[j]
+          double _potentialNewDistance = DataPoints[i].CalculateDistance(Clusters[j]);
+          if (_potentialNewDistance < _currentDistance)
             {
-                _currentDistance = _potentialNewDistance;
-                DataPoints[i].CentroidIndex = j;
-                _membershipChange = true;
+              // if DataPoint[i] is closer to Clusters[j] than it was to its
+              // past cluster, reassign it
+              DataPoints[i].CentroidIndex = j;
+              _currentDistance = _potentialNewDistance;
+              _membershipChange = true;
             }
         }
     }
-    return _membershipChange;
+  return _membershipChange;
 }
+
 
 // Uses new data to recalcultate centroid points
 void KMeans::RecalculateCentroids()
 {
-    // Loop through each centroid
+    // For each centroid
     for (int i = 0; i < ClusterSize; i++)
     {
         int _total = 0;
