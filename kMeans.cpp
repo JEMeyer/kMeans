@@ -105,7 +105,7 @@ bool KMeans::ChangeMemberships()
 }
 
 // Makes the clusters homogenized
-bool KMeans::HomoClusters()
+bool KMeans::HomogenizeClusters()
 {
     return false;
 }

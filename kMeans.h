@@ -22,7 +22,7 @@ class KMeans
   bool ChangeMemberships();
 
   // Homogenize the clusters so all labels are in the same super cluster
-  bool HomoClusters();
+  bool HomogenizeClusters();
 
   // Uses new data to recalcultate centroid points
   void RecalculateCentroids();
