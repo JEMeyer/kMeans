@@ -11,8 +11,10 @@ class DataPoint
         int Label;
         // 13-dimensional PLP features (one frame) from audio
         std::array<double, 13> Data;
-        // the index of the cluster this frame was assigned to
+        // the index of the cluster this frame is assigned to
         int CentroidIndex;
+        // the index of the cluster this frame was assigned to
+        int PreviousCentroidIndex;
         // the distance from this frame to it 
         double CalculateDistance(DataPoint clusterPoint);
 };

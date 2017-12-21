@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "dataPoint.h"
+#include "kMeans.h"
 
 // Main method. Reads in the crime data and calls the k-means algorithm
 int main(int argc, char* argv[])
@@ -38,4 +39,6 @@ int main(int argc, char* argv[])
     }
     std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
     _inFile.close();
+
+    KMeans(_dataPoints, 100).Run();
 }
