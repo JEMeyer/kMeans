@@ -39,6 +39,5 @@ int main(int argc, char* argv[])
     std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
     _inFile.close();
 
-    KMeans kMeans = KMeans(_dataPoints, 100);
-    kMeans.Run();
+    KMeans(_dataPoints, 100).Run();
 }

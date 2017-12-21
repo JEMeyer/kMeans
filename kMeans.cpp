@@ -5,6 +5,7 @@
 #include <random>
 #include <limits>
 #include <algorithm>
+#include <iostream>
 #include "kMeans.h"
 #include "dataPoint.h"
 #define MAX_DOUBLE std::numeric_limits<double>::max()
@@ -25,6 +26,7 @@ void KMeans::Run()
     bool _membershipChange = true;
     while (_membershipChange)
     {
+        std::cout << "changing memberships" << std::endl;
         _membershipChange = ChangeMemberships();
         RecalculateCentroids();
     }
@@ -102,6 +104,11 @@ bool KMeans::ChangeMemberships()
   return _membershipChange;
 }
 
+// Makes the clusters homogenized
+bool KMeans::HomoClusters()
+{
+    return false;
+}
 
 // Uses new data to recalcultate centroid points
 void KMeans::RecalculateCentroids()
