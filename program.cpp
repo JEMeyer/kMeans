@@ -4,11 +4,11 @@
 #include <iostream>
 #include <vector>
 #include "dataPoint.h"
-
+#include "kMeans.h"
 
 int main(int argc, char* argv[])
 {
-    int _startingLabel;
+    int _originalLabel;
     std::array<double,13> _data;
     std::vector<DataPoint> _dataPoints;
     std::ifstream _inFile;
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     }
     
     while (_inFile >> 
-            _startingLabel >> 
+            _originalLabel >> 
             _data[0] >> 
             _data[1] >> 
             _data[2] >> 
@@ -34,8 +34,11 @@ int main(int argc, char* argv[])
             _data[11] >> 
             _data[12]) 
     {
-        _dataPoints.push_back(DataPoint(_startingLabel, _data));    
+        _dataPoints.push_back(DataPoint(_originalLabel, _data));    
     }
     std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
     _inFile.close();
+
+    KMeans kMeans = KMeans(_dataPoints, 100);
+    kMeans.Run();
 }
