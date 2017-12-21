@@ -7,13 +7,12 @@
 #include "dataPoint.h"
 
 // Our constructor
-DataPoint::DataPoint(int label, std::array<double,13> data)
+DataPoint::DataPoint(int label, std::array<double, 13> data)
 {
     Label = label;
     Data = data;
     CentroidIndex = -1;
 }
-
 
 // Main kMeans function
 // Calculate the euclidian distance between this point and some other point
