@@ -22,22 +22,24 @@ KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters)
 // the given cluster size
 void KMeans::Run()
 {
-    InitializeCentroids();
-    bool _membershipChange = true;
+  InitializeCentroids();
+  bool _membershipChange = true;
+  int epochNum = 0;
     while (_membershipChange)
-    {
-        std::cout << "changing memberships" << std::endl;
+      {
+        epochNum++;
+        std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
         _membershipChange = ChangeMemberships();
         RecalculateCentroids();
-    }
+      }
 }
 
 
 // Initializes the clusers to guaranteed random points
 void KMeans::InitializeCentroids()
 {
-    std::set<int> _usedPointIndexes;
-    for (int i = 0; i < NumClusters; i++)
+  std::set<int> _usedPointIndexes;
+  for (int i = 0; i < NumClusters; i++)
     {
       // only used once to initialise (seed) engine
       std::random_device rd;
