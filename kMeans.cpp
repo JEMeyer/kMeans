@@ -2,6 +2,7 @@
 #include <array>
 #include <vector>
 #include <set>
+#include <map>
 #include <random>
 #include <limits>
 #include <algorithm>
@@ -10,33 +11,35 @@
 #include "dataPoint.h"
 #define MAX_DOUBLE std::numeric_limits<double>::max()
 
-KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters)
+KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters, int maxLabels)
 {
     DataPoints = dataPoints;
     NumClusters = numClusters;
+    maxLabels = maxLabels;
 }
 
 // Runs the k-means algorithm on the defined set of data points with
 // the given cluster size
 void KMeans::Run()
 {
-  InitializeCentroids();
-  bool _membershipChange = true;
-  int epochNum = 0;
+    InitializeCentroids();
+    bool _membershipChange = true;
+    int epochNum = 0;
     while (_membershipChange)
-      {
+    {
         epochNum++;
         std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
         _membershipChange = ChangeMemberships();
+        // _membershipChange = HomogenizeClusters();
         RecalculateCentroids();
-      }
+    }
 }
 
 // Initializes the clusers to guaranteed random points
 void KMeans::InitializeCentroids()
 {
-  std::set<int> _usedPointIndexes;
-  for (int i = 0; i < NumClusters; i++)
+    std::set<int> _usedPointIndexes;
+    for (int i = 0; i < NumClusters; i++)
     {
         // only used once to initialise (seed) engine
         std::random_device rd;
@@ -68,6 +71,7 @@ bool KMeans::ChangeMemberships()
     // for each DataPoint (DataPoints[i])
     for (int i = 0; i < DataPoints.size(); i++)
     {
+        DataPoints[i].PreviousCentroidIndex = DataPoints[i].CentroidIndex;
         double _currentDistance;
         if (DataPoints[i].CentroidIndex == -1)
         {
@@ -105,6 +109,20 @@ bool KMeans::ChangeMemberships()
 bool KMeans::HomogenizeClusters()
 {
     bool _membershipChange = false;
+    std::map<int, std::map<int, int>> _labelToAllCentroids;
+    for (int i = 0; i < DataPoints.size(); i++)
+    {
+        _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex]++;
+    }
+
+    std::map<int, int> _labelToCentroid;
+    for (int i = 0; i < MaxLabels; i++)
+    {
+        if (_labelToAllCentroids[i].size())
+        {
+
+        }
+    }
     return _membershipChange;
 }
 

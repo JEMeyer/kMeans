@@ -8,9 +8,10 @@ class KMeans
 {
   public:
     // Our constructor
-    KMeans(std::vector<DataPoint> dataPoints, int numClusters);
+    KMeans(std::vector<DataPoint> dataPoints, int numClusters, int maxLabels);
     std::vector<DataPoint> DataPoints;
     int NumClusters;
+    int MaxLabels;
 
     // save centroid for each cluster
     std::vector<DataPoint> Centroids;

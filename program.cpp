@@ -9,6 +9,7 @@
 int main(int argc, char *argv[])
 {
     int _originalLabel;
+    int _maxLabels = 0;
     std::array<double, 13> _data;
     std::vector<DataPoint> _dataPoints;
     std::ifstream _inFile;
@@ -36,9 +37,13 @@ int main(int argc, char *argv[])
            _data[12])
     {
         _dataPoints.push_back(DataPoint(_originalLabel, _data));
+        if (_originalLabel > _maxLabels)
+        {
+            _maxLabels = _originalLabel;
+        }
     }
     std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
     _inFile.close();
 
-    KMeans(_dataPoints, 100).Run();
+    KMeans(_dataPoints, 100, _maxLabels).Run();
 }
