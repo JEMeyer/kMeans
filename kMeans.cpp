@@ -23,9 +23,9 @@ KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters, int maxLabels
 void KMeans::Run()
 {
     InitializeCentroids();
-    bool _membershipChange = true;
+    int _membershipChange = 10000;
     int epochNum = 0;
-    while (_membershipChange)
+    while (_membershipChange > 1000)
     {
       // Print centroids for debugging
       // for (int i = 0; i < NumClusters; i++)
@@ -77,9 +77,9 @@ void KMeans::InitializeCentroids()
 }
 
 // Reassigns memberships. If any assignment changes, we return true
-bool KMeans::ChangeMemberships()
+int KMeans::ChangeMemberships()
 {
-    bool _membershipChange = false;
+    int _membershipChange = 0;
 
     std::map<int, int> my_map;
       
@@ -115,7 +115,7 @@ bool KMeans::ChangeMemberships()
                 // past cluster, reassign it
                 DataPoints[i].CentroidIndex = j;
                 _currentDistance = _potentialNewDistance;
-                _membershipChange = true;
+                _membershipChange++;
                 
                 // debugging
                 //std::cout << DataPoints[i].CentroidIndex << std::endl;
