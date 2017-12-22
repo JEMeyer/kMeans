@@ -27,24 +27,23 @@ void KMeans::Run()
     int epochNum = 0;
     while (_membershipChange)
     {
-
-        // Print centroids for debugging
-        for (int i = 0; i < NumClusters; i++)
+      // Print centroids for debugging
+      for (int i = 0; i < NumClusters; i++)
         {
-            DataPoint centroid = Centroids[i];
-            for (auto const &value : centroid.Data)
+          DataPoint centroid = Centroids[i];
+          for (auto const &value : centroid.Data)
             {
-                std::cout << value << ",";
+              std::cout << value << ",";
             }
-            std::cout << "\n";
+          std::cout << "\n";
         }
-        // Done debugging
-
-        epochNum++;
-        std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
-
-        _membershipChange = ChangeMemberships();
-        RecalculateCentroids();
+      // Done debugging
+      
+      epochNum++;
+      std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
+      
+      _membershipChange = ChangeMemberships();
+      RecalculateCentroids();
     }
 }
 
@@ -82,6 +81,8 @@ bool KMeans::ChangeMemberships()
 {
     bool _membershipChange = false;
 
+    std::map<int, int> my_map;
+      
     // for each DataPoint (DataPoints[i])
     for (int i = 0; i < DataPoints.size(); i++)
     {
@@ -117,9 +118,16 @@ bool KMeans::ChangeMemberships()
                 _membershipChange = true;
                 
                 // debugging
-                std::cout << DataPoints[i].CentroidIndex << std::endl;
+                //std::cout << DataPoints[i].CentroidIndex << std::endl;
               }
           }
+
+        if ( my_map.find(DataPoints[i].Label) == my_map.end() ) {
+          my_map[DataPoints[i].Label] = 1;
+        } else {
+          my_map[DataPoints[i].Label] = my_map[DataPoints[i].Label]+1;
+        }
+         
     }
     return _membershipChange;
 }
