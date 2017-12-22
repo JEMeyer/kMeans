@@ -34,7 +34,7 @@ void KMeans::Run()
             DataPoint centroid = Centroids[i];
             for (auto const &value : centroid.Data)
             {
-                std::cout << value << ",";
+                std::cout << value << " ";
             }
             std::cout << "\n";
         }
