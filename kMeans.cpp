@@ -146,19 +146,38 @@ int KMeans::ChangeMemberships()
 bool KMeans::HomogenizeClusters()
 {
     bool _membershipChange = false;
+    
+    // declare orgLabel: newCluster: numFramesInCluster
     std::map<int, std::map<int, int>> _labelToAllCentroids;
-    for (int i = 0; i < DataPoints.size(); i++)
-    {
-        _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex]++;
-    }
-
-    std::map<int, int> _labelToCentroid;
-    for (int i = 0; i < MaxLabels; i++)
-    {
-        if (_labelToAllCentroids[i].size())
+    // fill in map 
+    for (int i = 0; i < DataPoints.size(); i++) {
+      // if the map doesnt have the nested keys, set to 1
+      if (
+          _labelToAllCentroids.find(DataPoints[i].Label)
+          == _labelToAllCentroids.end()
+          &&
+          _labelToAllCentroids[DataPoints[i].Label].find(DataPoints[i].CentroidIndex)
+          == _labelToAllCentroids[DataPoints[i].Label].end()
+          )
         {
+          _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex] = 1;
+        }
+      else
+        {
+          // if the map does have the key, increment
+          _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex]
+            = _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex]+1;
         }
     }
+    
+    std::map<int, int> _labelToCentroid;
+    for (int i = 0; i < MaxLabels; i++)
+      {
+        if (_labelToAllCentroids[i].size() < 1)
+          {
+            // loop over all clusters, pick highest
+          }
+      }
     return _membershipChange;
 }
 
