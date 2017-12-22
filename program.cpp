@@ -43,8 +43,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
-
     _inFile.close();
 
     // Run kmeans
