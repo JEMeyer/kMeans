@@ -82,6 +82,7 @@ void KMeans::InitializeCentroids()
 bool KMeans::ChangeMemberships()
 {
     bool _membershipChange = false;
+
     // for each DataPoint (DataPoints[i])
     for (int i = 0; i < DataPoints.size(); i++)
     {
@@ -109,11 +110,15 @@ bool KMeans::ChangeMemberships()
             double _potentialNewDistance = DataPoints[i].CalculateDistance(Centroids[j]);
             if (_potentialNewDistance < _currentDistance)
             {
-                // if DataPoint[i] is closer to Clusters[j] than it was to its
-                // past cluster, reassign it
-                DataPoints[i].CentroidIndex = j;
-                _currentDistance = _potentialNewDistance;
-                _membershipChange = true;
+              // if DataPoint[i] is closer to Clusters[j] than it was to its
+              // past cluster, reassign it
+              DataPoints[i].CentroidIndex = j;
+              std::cout << "======BEGIN=======" << std::endl;
+              std::cout << j << std::endl;
+              std::cout << DataPoints[i].CentroidIndex << std::endl;
+              std::cout << "======END=======" << std::endl;
+              _currentDistance = _potentialNewDistance;
+              _membershipChange = true;
             }
         }
     }
