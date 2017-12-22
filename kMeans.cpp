@@ -147,7 +147,7 @@ void KMeans::RecalculateCentroids()
     for (int i = 0; i < NumClusters; i++)
     {
         int _total = 0;
-        std::array<double, 13> _clusterSum;
+        std::array<double, 13> _clusterSum = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
         /*
         for (DataPoint x : DataPoints)
         {
@@ -175,26 +175,53 @@ void KMeans::RecalculateCentroids()
         {
             if (DataPoints[j].CentroidIndex == i)
             {
-
+                _clusterSum[0] += DataPoints[j].Data[0];
+                _clusterSum[1] += DataPoints[j].Data[1];
+                _clusterSum[2] += DataPoints[j].Data[2];
+                _clusterSum[3] += DataPoints[j].Data[3];
+                _clusterSum[4] += DataPoints[j].Data[4];
+                _clusterSum[5] += DataPoints[j].Data[5];
+                _clusterSum[6] += DataPoints[j].Data[6];
+                _clusterSum[7] += DataPoints[j].Data[7];
+                _clusterSum[8] += DataPoints[j].Data[8];
+                _clusterSum[9] += DataPoints[j].Data[9];
+                _clusterSum[10] += DataPoints[j].Data[10];
+                _clusterSum[11] += DataPoints[j].Data[11];
+                _clusterSum[12] += DataPoints[j].Data[12];
                 // add DataPoints to _clusterSum elementwise
                 // https://stackoverflow.com/questions/3376124/how-to-add-
                 // element-by-element-of-two-stl-vectors
-                std::transform(
-                    _clusterSum.begin(),
-                    _clusterSum.end(),
-                    DataPoints[j].Data.begin(),
-                    _clusterSum.begin(),
-                    std::plus<double>());
+                // std::transform(
+                //     _clusterSum.begin(),
+                //     _clusterSum.end(),
+                //     DataPoints[j].Data.begin(),
+                //     _clusterSum.begin(),
+                //     std::plus<double>());
 
                 _total++;
             }
         }
 
+        _clusterSum[0] /= _total;
+        _clusterSum[1] /= _total;
+        _clusterSum[2] /= _total;
+        _clusterSum[3] /= _total;
+        _clusterSum[4] /= _total;
+        _clusterSum[5] /= _total;
+        _clusterSum[6] /= _total;
+        _clusterSum[7] /= _total;
+        _clusterSum[8] /= _total;
+        _clusterSum[9] /= _total;
+        _clusterSum[10] /= _total;
+        _clusterSum[11] /= _total;
+        _clusterSum[12] /= _total;
+
+        Centroids[i].Data = _clusterSum;
         // Assign the new averages for this cluster
-        std::transform(
-            _clusterSum.begin(),
-            _clusterSum.end(),
-            Centroids[i].Data.begin(),
-            std::bind1st(std::divides<double>(), _total));
+        // std::transform(
+        //     _clusterSum.begin(),
+        //     _clusterSum.end(),
+        //     Centroids[i].Data.begin(),
+        //     std::bind1st(std::divides<double>(), _total));
     }
 }
