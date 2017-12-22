@@ -117,7 +117,7 @@ bool KMeans::ChangeMemberships()
                 _membershipChange = true;
                 
                 // debugging
-                std::cout << DataPoints[i].CentroidIndex << std::endl;
+                // std::cout << DataPoints[i].CentroidIndex << std::endl;
               }
           }
     }
