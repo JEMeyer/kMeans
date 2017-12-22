@@ -26,19 +26,7 @@ void KMeans::Run()
     int _membershipChange = 10001;
     int epochNum = 0;
     while (_membershipChange > 10000)
-    {
-      // Print centroids for debugging
-      // for (int i = 0; i < NumClusters; i++)
-      //   {
-      //     DataPoint centroid = Centroids[i];
-      //     for (auto const &value : centroid.Data)
-      //       {
-      //         std::cout << value << " ";
-      //       }
-      //     std::cout << "\n";
-      //   }
-      // Done debugging
-      
+    {      
       epochNum++;
       std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
       
@@ -191,31 +179,14 @@ void KMeans::RecalculateCentroids()
         int _total = 0;
         std::array<double, 13> _clusterSum = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,
                                               0.0,0.0,0.0,0.0,0.0,0.0};
-        /*
-        for (DataPoint x : DataPoints)
-        {
-                // add DataPoints to _clusterSum elementwise
-                // https://stackoverflow.com/questions/3376124/how-to-add-
-                // element-by-element-of-two-stl-vectors
-                std::transform(
-                    x.begin(),
-                    x.end(),
-                    .Data.begin(),
-                    _clusterSum.begin(),
-                    std::subtract<double>());
-
-                // Assign the new averages for this cluster
-                std::transform(
-                    _clusterSum.begin(),
-                    _clusterSum.end(),
-                    _clusterSum.begin(),
-                    std::bind1st(std::divides<double>(), _total));
-                // _total++;
-        }
-*/
         // For each dataPoint
         for (int j = 0; j < DataPoints.size(); j++)
         {
+            /* 
+            * If this datapoint is in this centroid, add to running
+            * total for each dimension
+            TODO: Make generic
+            */
             if (DataPoints[j].CentroidIndex == i)
             {
                 _clusterSum[0] += DataPoints[j].Data[0];
@@ -231,20 +202,13 @@ void KMeans::RecalculateCentroids()
                 _clusterSum[10] += DataPoints[j].Data[10];
                 _clusterSum[11] += DataPoints[j].Data[11];
                 _clusterSum[12] += DataPoints[j].Data[12];
-                // add DataPoints to _clusterSum elementwise
-                // https://stackoverflow.com/questions/3376124/how-to-add-
-                // element-by-element-of-two-stl-vectors
-                // std::transform(
-                //     _clusterSum.begin(),
-                //     _clusterSum.end(),
-                //     DataPoints[j].Data.begin(),
-                //     _clusterSum.begin(),
-                //     std::plus<double>());
 
                 _total++;
             }
         }
 
+        // Average the dimension values
+        // TODO: Make generic
         _clusterSum[0] /= _total;
         _clusterSum[1] /= _total;
         _clusterSum[2] /= _total;
@@ -260,11 +224,5 @@ void KMeans::RecalculateCentroids()
         _clusterSum[12] /= _total;
 
         Centroids[i].Data = _clusterSum;
-        // Assign the new averages for this cluster
-        // std::transform(
-        //     _clusterSum.begin(),
-        //     _clusterSum.end(),
-        //     Centroids[i].Data.begin(),
-        //     std::bind1st(std::divides<double>(), _total));
     }
 }
