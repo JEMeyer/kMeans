@@ -136,9 +136,9 @@ bool KMeans::HomogenizeClusters()
 {
     bool _membershipChange = false;
 
-    // declare orgLabel: newCluster: numFramesInCluster
+    // declare map {orgLabel: {newCluster: numFramesInCluster}}
     std::map<int, std::map<int, int>> _labelToAllCentroids;
-    // fill in map
+    // for each DataPoint
     for (int i = 0; i < DataPoints.size(); i++)
     {
         // if the map doesnt have the nested keys, set to 1
@@ -154,15 +154,31 @@ bool KMeans::HomogenizeClusters()
             _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex]++;
         }
     }
-
-    std::map<int, int> _labelToCentroid;
+    
+    std::map<int, int> _labelToBiggestCentroid;
+    // for each original label (from before clustering)
     for (int i = 0; i < MaxLabels; i++)
     {
-        if (_labelToAllCentroids[i].size() < 1)
+      // check if it's found in more than one cluster
+      if (_labelToAllCentroids[i].size() > 1)
         {
-            // loop over all clusters, pick highest
+          int biggestCluster = -1;
+          int biggestClusterSize = -1;
+          // for each cluster in which that label is found 
+          for (int j = 0; j < _labelToAllCentroids[i].size(); j++)
+            {
+              if (_labelToAllCentroids[i][j] > biggestClusterSize)
+                {
+                  biggestCluster = j;
+                  biggestClusterSize = _labelToAllCentroids[i][j];
+                }
+            }
+          // assign biggest cluster as new label for orig label
+          _labelToBiggestCentroid[i] = biggestCluster;
         }
     }
+
+    
     return _membershipChange;
 }
 
