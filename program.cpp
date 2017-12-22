@@ -37,8 +37,21 @@ int main(int argc, char *argv[])
     {
         _dataPoints.push_back(DataPoint(_originalLabel, _data));
     }
+
     std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
+
     _inFile.close();
 
-    KMeans(_dataPoints, 100).Run();
+    // Run kmeans
+    KMeans(_dataPoints, 10).Run();
+
+    // print output to file
+    std::ofstream myfile;
+    myfile.open ("output");
+    for (int i = 0; i < _dataPoints.size(); i++)
+    {
+      myfile << _dataPoints[i].Label << " " << _dataPoints[i].CentroidIndex << std::endl;
+    }
+    myfile.close();
+    return 0;
 }
