@@ -138,13 +138,8 @@ void KMeans::RecalculateCentroids()
         int _total = 0;
         std::array<double, 13> _clusterSum;
 
-        // For each dataPoint
-        for (int j = 0; j < DataPoints.size(); j++)
+        for (DataPoint x : DataPoints)
         {
-            if (DataPoints[j].CentroidIndex == i)
-            {
-                _total++;
-
                 // add DataPoints to _clusterSum elementwise
                 // https://stackoverflow.com/questions/3376124/how-to-add-
                 // element-by-element-of-two-stl-vectors
@@ -154,14 +149,42 @@ void KMeans::RecalculateCentroids()
                     DataPoints[j].Data.begin(),
                     _clusterSum.begin(),
                     std::plus<double>());
+
+                // Assign the new averages for this cluster
+                std::transform(
+                    _clusterSum.begin(),
+                    _clusterSum.end(),
+                    _clusterSum.begin(),
+                    std::bind1st(std::divides<double>(), _total));
+                // _total++;
+        }
+
+        // For each dataPoint
+        for (int j = 0; j < DataPoints.size(); j++)
+        {
+            if (DataPoints[j].CentroidIndex == i)
+            {
+                
+
+                // add DataPoints to _clusterSum elementwise
+                // https://stackoverflow.com/questions/3376124/how-to-add-
+                // element-by-element-of-two-stl-vectors
+                // std::transform(
+                //     _clusterSum.begin(),
+                //     _clusterSum.end(),
+                //     DataPoints[j].Data.begin(),
+                //     _clusterSum.begin(),
+                //     std::plus<double>());
+
+                // _total++;
             }
         }
 
         // Assign the new averages for this cluster
-        std::transform(
-            _clusterSum.begin(),
-            _clusterSum.end(),
-            Centroids[i].Data.begin(),
-            std::bind1st(std::divides<double>(), _total));
+        // std::transform(
+        //     _clusterSum.begin(),
+        //     _clusterSum.end(),
+        //     Centroids[i].Data.begin(),
+        //     std::bind1st(std::divides<double>(), _total));
     }
 }
