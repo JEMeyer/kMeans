@@ -20,7 +20,7 @@ class KMeans
     void InitializeCentroids();
 
     // Reassigns memberships. If anything changes, we return true
-    bool ChangeMemberships();
+    int ChangeMemberships();
 
     // Homogenize the clusters so all labels are in the same super cluster
     bool HomogenizeClusters();
