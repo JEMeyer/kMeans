@@ -113,6 +113,10 @@ bool KMeans::ChangeMemberships()
               // if DataPoint[i] is closer to Clusters[j] than it was to its
               // past cluster, reassign it
               DataPoints[i].CentroidIndex = j;
+              std::cout << "======BEGIN=======" << std::endl;
+              std::cout << j << std::endl;
+              std::cout << DataPoints[i].CentroidIndex << std::endl;
+              std::cout << "======END=======" << std::endl;
               _currentDistance = _potentialNewDistance;
               _membershipChange = true;
             }
