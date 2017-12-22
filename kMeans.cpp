@@ -22,30 +22,29 @@ KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters, int maxLabels
 // the given cluster size
 void KMeans::Run()
 {
-  InitializeCentroids();
-  bool _membershipChange = true;
-  int epochNum = 0;
-  while (_membershipChange)
+    InitializeCentroids();
+    bool _membershipChange = true;
+    int epochNum = 0;
+    while (_membershipChange)
     {
-      
-      // Print centroids for debugging
-      for (int i = 0; i < NumClusters; i++)
+
+        // Print centroids for debugging
+        for (int i = 0; i < NumClusters; i++)
         {
-          DataPoint centroid = Centroids[i];
-          for(auto const& value: centroid.Data )
+            DataPoint centroid = Centroids[i];
+            for (auto const &value : centroid.Data)
             {
-              std::cout << value << ",";
+                std::cout << value << ",";
             }
-          std::cout << "\n";
+            std::cout << "\n";
         }
-      // Done debugging
-      
-      epochNum++;
-      std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
-      
-      _membershipChange = ChangeMemberships();
-      RecalculateCentroids();
-      
+        // Done debugging
+
+        epochNum++;
+        std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
+
+        _membershipChange = ChangeMemberships();
+        RecalculateCentroids();
     }
 }
 
@@ -100,7 +99,7 @@ bool KMeans::ChangeMemberships()
             // _currentDistance is distance between DataPoint[i] and its current
             // centroid (cluster assignment)
             _currentDistance =
-              DataPoints[i].CalculateDistance(Centroids[DataPoints[i].CentroidIndex]);
+                DataPoints[i].CalculateDistance(Centroids[DataPoints[i].CentroidIndex]);
         }
 
         // For each cluster
@@ -110,15 +109,11 @@ bool KMeans::ChangeMemberships()
             double _potentialNewDistance = DataPoints[i].CalculateDistance(Centroids[j]);
             if (_potentialNewDistance < _currentDistance)
             {
-              // if DataPoint[i] is closer to Clusters[j] than it was to its
-              // past cluster, reassign it
-              DataPoints[i].CentroidIndex = j;
-              std::cout << "======BEGIN=======" << std::endl;
-              std::cout << j << std::endl;
-              std::cout << DataPoints[i].CentroidIndex << std::endl;
-              std::cout << "======END=======" << std::endl;
-              _currentDistance = _potentialNewDistance;
-              _membershipChange = true;
+                // if DataPoint[i] is closer to Clusters[j] than it was to its
+                // past cluster, reassign it
+                DataPoints[i].CentroidIndex = j;
+                _currentDistance = _potentialNewDistance;
+                _membershipChange = true;
             }
         }
     }
@@ -140,7 +135,6 @@ bool KMeans::HomogenizeClusters()
     {
         if (_labelToAllCentroids[i].size())
         {
-
         }
     }
     return _membershipChange;
@@ -154,7 +148,7 @@ void KMeans::RecalculateCentroids()
     {
         int _total = 0;
         std::array<double, 13> _clusterSum;
-/*
+        /*
         for (DataPoint x : DataPoints)
         {
                 // add DataPoints to _clusterSum elementwise
@@ -181,7 +175,6 @@ void KMeans::RecalculateCentroids()
         {
             if (DataPoints[j].CentroidIndex == i)
             {
-                
 
                 // add DataPoints to _clusterSum elementwise
                 // https://stackoverflow.com/questions/3376124/how-to-add-
