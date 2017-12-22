@@ -104,21 +104,26 @@ bool KMeans::ChangeMemberships()
 
         // For each cluster
         for (int j = 0; j < NumClusters; j++)
-        {
+          {
             // Calculate distance between DataPoint[i] and Clusters[j]
             double _potentialNewDistance = DataPoints[i].CalculateDistance(Centroids[j]);
             if (_potentialNewDistance < _currentDistance)
-            {
+
+              {
                 // if DataPoint[i] is closer to Clusters[j] than it was to its
                 // past cluster, reassign it
                 DataPoints[i].CentroidIndex = j;
                 _currentDistance = _potentialNewDistance;
                 _membershipChange = true;
-            }
-        }
+                
+                // debugging
+                std::cout << DataPoints[i].CentroidIndex << std::endl;
+              }
+          }
     }
     return _membershipChange;
 }
+
 
 // Makes the clusters homogenized
 bool KMeans::HomogenizeClusters()
