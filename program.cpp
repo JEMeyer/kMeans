@@ -42,8 +42,25 @@ int main(int argc, char *argv[])
             _maxLabels = _originalLabel;
         }
     }
+
     std::cout << "we read in " << _dataPoints.size() << " data points" << std::endl;
+
     _inFile.close();
 
+<<<<<<< HEAD
     KMeans(_dataPoints, 100, _maxLabels).Run();
+=======
+    // Run kmeans
+    KMeans(_dataPoints, 10).Run();
+
+    // print output to file
+    std::ofstream myfile;
+    myfile.open ("output");
+    for (int i = 0; i < _dataPoints.size(); i++)
+    {
+      myfile << _dataPoints[i].Label << " " << _dataPoints[i].CentroidIndex << std::endl;
+    }
+    myfile.close();
+    return 0;
+>>>>>>> 5a48fae9e0d1850848893e0f4c67cfaaca9873da
 }

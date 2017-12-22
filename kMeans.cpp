@@ -26,7 +26,9 @@ void KMeans::Run()
     bool _membershipChange = true;
     int epochNum = 0;
     while (_membershipChange)
-    {
+      {
+        DataPoint centroid = Centroids[1];
+        std::cout << centroid.Data[1] << std::endl;
         epochNum++;
         std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
         _membershipChange = ChangeMemberships();
@@ -84,7 +86,8 @@ bool KMeans::ChangeMemberships()
         {
             // _currentDistance is distance between DataPoint[i] and its current
             // centroid (cluster assignment)
-            _currentDistance = DataPoints[i].CalculateDistance(Centroids[DataPoints[i].CentroidIndex]);
+            _currentDistance =
+              DataPoints[i].CalculateDistance(Centroids[DataPoints[i].CentroidIndex]);
         }
 
         // For each cluster
