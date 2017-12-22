@@ -156,11 +156,11 @@ void KMeans::RecalculateCentroids()
                 // https://stackoverflow.com/questions/3376124/how-to-add-
                 // element-by-element-of-two-stl-vectors
                 std::transform(
+                    x.begin(),
+                    x.end(),
+                    .Data.begin(),
                     _clusterSum.begin(),
-                    _clusterSum.end(),
-                    x.Data.begin(),
-                    _clusterSum.begin(),
-                    std::plus<double>());
+                    std::subtract<double>());
 
                 // Assign the new averages for this cluster
                 std::transform(
