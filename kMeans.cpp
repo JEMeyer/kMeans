@@ -27,26 +27,6 @@ void KMeans::Run()
     int epochNum = 0;
     while (_membershipChange > 10000)
     {
-<<<<<<< HEAD
-
-        // Print centroids for debugging
-        for (int i = 0; i < NumClusters; i++)
-        {
-            DataPoint centroid = Centroids[i];
-            for (auto const &value : centroid.Data)
-            {
-                std::cout << value << " ";
-            }
-            std::cout << "\n";
-        }
-        // Done debugging
-
-        epochNum++;
-        std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
-
-        _membershipChange = ChangeMemberships();
-        RecalculateCentroids();
-=======
       // Print centroids for debugging
       // for (int i = 0; i < NumClusters; i++)
       //   {
@@ -64,7 +44,6 @@ void KMeans::Run()
       
       _membershipChange = ChangeMemberships();
       RecalculateCentroids();
->>>>>>> f654a8c74ad4d3a02b8a1cd9a3c1178b9fcac201
     }
     std::cout<< "Completed clustering with " << _membershipChange << " changed frame-label pairs." << std::endl;
 }
