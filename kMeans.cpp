@@ -23,14 +23,15 @@ KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters, int maxLabels
 void KMeans::Run()
 {
     InitializeCentroids();
-    int _membershipChange = 10001;
+    bool _membershipChange = true;
     int epochNum = 0;
-    while (_membershipChange > 10000)
+    while (_membershipChange)
     {
         epochNum++;
         std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
 
-        _membershipChange = ChangeMemberships();
+        ChangeMemberships();
+        _membershipChange = HomogenizeClusters();
         RecalculateCentroids();
     }
     std::cout << "Completed clustering with " << _membershipChange << " changed frame-label pairs." << std::endl;
@@ -154,31 +155,56 @@ bool KMeans::HomogenizeClusters()
             _labelToAllCentroids[DataPoints[i].Label][DataPoints[i].CentroidIndex]++;
         }
     }
-    
+
     std::map<int, int> _labelToBiggestCentroid;
     // for each original label (from before clustering)
     for (int i = 0; i < MaxLabels; i++)
     {
-      // check if it's found in more than one cluster
-      if (_labelToAllCentroids[i].size() > 1)
+        // check if it's found in more than one cluster
+        if (_labelToAllCentroids[i].size() > 1)
         {
-          int biggestCluster = -1;
-          int biggestClusterSize = -1;
-          // for each cluster in which that label is found 
-          for (int j = 0; j < _labelToAllCentroids[i].size(); j++)
-            {
-              if (_labelToAllCentroids[i][j] > biggestClusterSize)
+            int biggestCluster = -1;
+            int biggestClusterSize = -1;
+            // for each cluster in which that label is found
+            // first is key (centroid) second is value (size)
+            for(std::map<int,int>::iterator it = _labelToAllCentroids[i].begin();
+                 it != _labelToAllCentroids[i].end(); 
+                 ++it) {
+                if (it->second > biggestClusterSize)
                 {
-                  biggestCluster = j;
-                  biggestClusterSize = _labelToAllCentroids[i][j];
-                }
+                    biggestCluster = it->first;
+                    biggestClusterSize = it->second;
+                }     
             }
-          // assign biggest cluster as new label for orig label
-          _labelToBiggestCentroid[i] = biggestCluster;
+            /*for (int j = 0; j < _labelToAllCentroids[i].size(); j++)
+            {
+                if (_labelToAllCentroids[i][j] > biggestClusterSize)
+                {
+                    biggestCluster = j;
+                    biggestClusterSize = _labelToAllCentroids[i][j];
+                }
+            }*/
+            // assign biggest cluster as new label for orig label
+            _labelToBiggestCentroid[i] = biggestCluster;
+        }
+        else
+        {
+            _labelToBiggestCentroid[i] = _labelToAllCentroids[i].begin()->first;
         }
     }
 
-    
+    for (int i = 0; i < DataPoints.size(); i++)
+    {
+        if (DataPoints[i].CentroidIndex != _labelToBiggestCentroid[DataPoints[i].Label])
+        {
+            DataPoints[i].CentroidIndex = _labelToBiggestCentroid[DataPoints[i].Label];
+            if (DataPoints[i].CentroidIndex != DataPoints[i].PreviousCentroidIndex)
+            {
+                _membershipChange = true;
+            }
+        }
+    }
+
     return _membershipChange;
 }
 
