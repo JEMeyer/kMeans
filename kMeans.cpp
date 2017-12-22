@@ -23,15 +23,28 @@ void KMeans::Run()
   InitializeCentroids();
   bool _membershipChange = true;
   int epochNum = 0;
-    while (_membershipChange)
-      {
-        DataPoint centroid = Centroids[1];
-        std::cout << centroid.Data[1] << std::endl;
-        epochNum++;
-        std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
-        _membershipChange = ChangeMemberships();
-        RecalculateCentroids();
-      }
+  while (_membershipChange)
+    {
+      
+      // Print centroids for debugging
+      for (int i = 0; i < NumClusters; i++)
+        {
+          DataPoint centroid = Centroids[i];
+          for(auto const& value: centroid.Data )
+            {
+              std::cout << value << ",";
+            }
+          std::cout << "\n";
+        }
+      // Done debugging
+      
+      epochNum++;
+      std::cout << "Epoch " << epochNum << ": changing memberships" << std::endl;
+      
+      _membershipChange = ChangeMemberships();
+      RecalculateCentroids();
+      
+    }
 }
 
 // Initializes the clusers to guaranteed random points
