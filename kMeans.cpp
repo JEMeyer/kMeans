@@ -23,9 +23,9 @@ KMeans::KMeans(std::vector<DataPoint> dataPoints, int numClusters, int maxLabels
 void KMeans::Run()
 {
     InitializeCentroids();
-    int _membershipChange = 10000;
+    int _membershipChange = 10001;
     int epochNum = 0;
-    while (_membershipChange > 1000)
+    while (_membershipChange > 10000)
     {
       // Print centroids for debugging
       // for (int i = 0; i < NumClusters; i++)
@@ -45,6 +45,7 @@ void KMeans::Run()
       _membershipChange = ChangeMemberships();
       RecalculateCentroids();
     }
+    std::cout<< "Completed clustering with " << _membershipChange << " changed frame-label pairs." << std::endl;
 }
 
 // Initializes the clusers to guaranteed random points
@@ -122,17 +123,20 @@ int KMeans::ChangeMemberships()
               }
           }
 
+        // if the map doesnt have the key, set to 1
         if ( my_map.find(DataPoints[i].CentroidIndex) == my_map.end() ) {
           my_map[DataPoints[i].CentroidIndex] = 1;
         } else {
+          // if the map does have the key, increment
           my_map[DataPoints[i].CentroidIndex] = my_map[DataPoints[i].CentroidIndex]+1;
         }
          
     }
 
-    for(auto elem : my_map)
+    // print out all the <centroidID, numFrames> items 
+    for(auto item : my_map)
       {
-        std::cout << elem.first << " " << elem.second << "\n";
+        std::cout << item.first << " " << item.second << "\n";
       }
     return _membershipChange;
 }
@@ -158,6 +162,7 @@ bool KMeans::HomogenizeClusters()
     return _membershipChange;
 }
 
+
 // Uses new data to recalcultate centroid points
 void KMeans::RecalculateCentroids()
 {
@@ -165,7 +170,8 @@ void KMeans::RecalculateCentroids()
     for (int i = 0; i < NumClusters; i++)
     {
         int _total = 0;
-        std::array<double, 13> _clusterSum = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+        std::array<double, 13> _clusterSum = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+                                              0.0,0.0,0.0,0.0,0.0,0.0};
         /*
         for (DataPoint x : DataPoints)
         {
