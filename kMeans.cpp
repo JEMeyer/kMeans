@@ -223,8 +223,12 @@ void KMeans::RecalculateCentroids()
     for (int i = 0; i < NumClusters; i++)
     {
         int _total = 0;
-        std::array<double, 13> _clusterSum = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        std::array<double, 13> _clusterSum;
+        for (int i = 0; i < _clusterSum.size(); i++)
+        {
+            _clusterSum[i] = 0.0;
+        }
+        
         // For each dataPoint
         for (int j = 0; j < DataPoints.size(); j++)
         {

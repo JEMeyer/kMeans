@@ -20,8 +20,8 @@ double DataPoint::CalculateDistance(DataPoint clusterPoint)
 {
     // Get the sum of the squares of the distances for each dimension
     double _sumOfSquaresOfDistance = 0.0;
-    // For each of the 13 dimenions
-    for (int i = 0; i < 13; i++)
+    // For each of the dimenions
+    for (int i = 0; i < Data.size(); i++)
     {
         _sumOfSquaresOfDistance += std::pow(Data[i] - clusterPoint.Data[i], 2);
     }
