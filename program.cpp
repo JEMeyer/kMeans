@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     _inFile.close();
 
     // Run kmeans
-    KMeans(_dataPoints, 10, _maxLabels).Run();
+    KMeans(_dataPoints, 100, _maxLabels).Run();
 
     // print output to file
     std::ofstream myfile;
