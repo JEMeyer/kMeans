@@ -17,7 +17,7 @@ using namespace cv;
 using namespace std;
 
 void 
-read_batch(string filename, vector<Mat> &vec, Mat &label){
+read_batch(string filename, vector<Mat> &vec, Mat &label) {
     ifstream file (filename, ios::binary);
     if (file.is_open())
     {
@@ -43,12 +43,13 @@ read_batch(string filename, vector<Mat> &vec, Mat &label){
             }
             merge(channels, fin_img);
             vec.push_back(fin_img);
+            // cast to double
             label.ATD(0, i) = (double)tplabel;
         }
     }
 }
 
-Mat 
+Mat
 concatenateMat(vector<Mat> &vec){
 
     int height = vec[0].rows;

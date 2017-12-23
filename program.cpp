@@ -13,6 +13,41 @@ int main(int argc, char *argv[])
     std::array<double, 13> _data;
     std::vector<DataPoint> _dataPoints;
     std::ifstream _inFile;
+
+    
+    void read_batch(string filename, vector<Mat> &vec, Mat &label){
+      ifstream file (filename, ios::binary);
+      if (file.is_open())
+        {
+          int number_of_images = 10000;
+          int n_rows = 32;
+          int n_cols = 32;
+          // for each image in file
+          for(int i = 0; i < number_of_images; ++i)
+            {
+              unsigned char tplabel = 0;
+              file.read((char*) &tplabel, sizeof(tplabel));
+              vector<Mat> channels;
+              Mat fin_img = Mat::zeros(n_rows, n_cols, CV_8UC3);
+              for (int ch = 0; ch < 3; ++ch){
+                Mat tp = Mat::zeros(n_rows, n_cols, CV_8UC1);
+                for(int r = 0; r < n_rows; ++r){
+                  for(int c = 0; c < n_cols; ++c){
+                    unsigned char temp = 0;
+                    file.read((char*) &temp, sizeof(temp));
+                    tp.at<uchar>(r, c) = (int) temp;
+                  }
+                }
+                channels.push_back(tp);
+              }
+              merge(channels, fin_img);
+              vec.push_back(fin_img);
+              label.ATD(0, i) = (double)tplabel;
+            }
+        }
+    }
+
+
     _inFile.open("labeled_frames.txt");
     if (!_inFile)
     {
