@@ -46,14 +46,15 @@ int main(int argc, char *argv[])
     _inFile.close();
 
     // Run kmeans
-    KMeans(_dataPoints, 10, _maxLabels).Run();
+    KMeans _kMeans = KMeans(_dataPoints, 10, _maxLabels);
+    _kMeans.Run();
 
     // print output to file
     std::ofstream myfile;
     myfile.open ("output");
     for (int i = 0; i < _dataPoints.size(); i++)
     {
-      myfile << _dataPoints[i].Label << " " << _dataPoints[i].CentroidIndex << std::endl;
+      myfile << _kMeans.DataPoints[i].Label << " " << _kMeans.DataPoints[i].CentroidIndex << std::endl;
     }
     myfile.close();
     return 0;

@@ -211,6 +211,14 @@ bool KMeans::HomogenizeClusters()
 // Uses new data to recalcultate centroid points
 void KMeans::RecalculateCentroids()
 {
+    // In case we need to make a new centroid later
+    // only used once to initialise (seed) engine
+    std::random_device rd;
+    // random-number engine used (Mersenne-Twister in this case)
+    std::mt19937 rng(rd());
+    // guaranteed unbiased
+    std::uniform_int_distribution<int> uni(0, DataPoints.size());
+
     // For each centroid
     for (int i = 0; i < NumClusters; i++)
     {
@@ -245,22 +253,32 @@ void KMeans::RecalculateCentroids()
             }
         }
 
-        // Average the dimension values
-        // TODO: Make generic
-        _clusterSum[0] /= _total;
-        _clusterSum[1] /= _total;
-        _clusterSum[2] /= _total;
-        _clusterSum[3] /= _total;
-        _clusterSum[4] /= _total;
-        _clusterSum[5] /= _total;
-        _clusterSum[6] /= _total;
-        _clusterSum[7] /= _total;
-        _clusterSum[8] /= _total;
-        _clusterSum[9] /= _total;
-        _clusterSum[10] /= _total;
-        _clusterSum[11] /= _total;
-        _clusterSum[12] /= _total;
+        if (_total == 0)
+        {
+            // Reassign to a random datapoint
+            // Ensure we don't get the same starting data point two times
+            int _index = uni(rng);
 
+            Centroids[i].Data = DataPoints[_index].Data;
+        }
+        else
+        {
+            // Average the dimension values
+            // TODO: Make generic
+            _clusterSum[0] /= _total;
+            _clusterSum[1] /= _total;
+            _clusterSum[2] /= _total;
+            _clusterSum[3] /= _total;
+            _clusterSum[4] /= _total;
+            _clusterSum[5] /= _total;
+            _clusterSum[6] /= _total;
+            _clusterSum[7] /= _total;
+            _clusterSum[8] /= _total;
+            _clusterSum[9] /= _total;
+            _clusterSum[10] /= _total;
+            _clusterSum[11] /= _total;
+            _clusterSum[12] /= _total;
+        }
         Centroids[i].Data = _clusterSum;
     }
 }
